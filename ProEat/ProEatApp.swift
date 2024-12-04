@@ -5,6 +5,7 @@ struct ProEatApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView() // Correct reference to ContentView
+                .preferredColorScheme(.light)
         }
     }
 }
