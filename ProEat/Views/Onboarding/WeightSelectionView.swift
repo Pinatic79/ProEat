@@ -73,48 +73,36 @@ struct WeightSelectionView: View {
 
                     Spacer()
 
-                    // Navigation Buttons
-                    HStack {
-                        // Back Button
-                        Button(action: {
-                            dismiss() // Navigate back to the previous screen
-                        }) {
-                            HStack {
-                                Image(systemName: "arrow.left")
-                                    .foregroundColor(.blue)
-                                Text("Back")
-                                    .foregroundColor(.blue)
-                                    .font(.body)
-                            }
-                        }
-                        .padding(.leading, 20)
-
-                        Spacer()
-
-                        // Save and Next Button
-                        Button(action: {
-                            saveWeightAndProceed()
-                        }) {
-                            Text("Next")
-                                .frame(width: 100, height: 44)
-                                .background(weight.isEmpty ? Color.gray : Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(12)
-                                .font(.system(size: 20, weight: .bold, design: .rounded))
-                                .shadow(radius: 5)
-                                .opacity(weight.isEmpty ? 0.5 : 1.0)
-                        }
-                        .disabled(weight.isEmpty) // Disable button if no input
-                        .padding(.trailing, 20)
+                    // Save and Next Button
+                    Button(action: {
+                        saveWeightAndProceed()
+                    }) {
+                        Text("Next")
+                            .frame(width: 100, height: 44)
+                            .background(weight.isEmpty ? Color.gray : Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                            .font(.system(size: 20, weight: .bold, design: .rounded))
+                            .shadow(radius: 5)
+                            .opacity(weight.isEmpty ? 0.5 : 1.0)
                     }
+                    .disabled(weight.isEmpty) // Disable button if no input
                     .padding(.bottom, 40)
                 }
                 .padding(.top, 80)
             }
-            .navigationDestination(for: String.self) { _ in
-                DietSelectionView() // Replace with your next onboarding view
+            .navigationBarTitleDisplayMode(.inline) // Consistent title style
+            .navigationBarBackButtonHidden(true) // Hide the default back button
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        dismiss() // Navigate back
+                    }) {
+                        Image(systemName: "arrow.left")
+                            .foregroundColor(.blue) // Match other page styles
+                    }
+                }
             }
-            .navigationBarHidden(true) // Hide navigation bar for a cleaner UI
         }
     }
 

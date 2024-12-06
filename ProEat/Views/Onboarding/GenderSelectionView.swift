@@ -43,20 +43,7 @@ struct GenderSelectionView: View {
                     // Navigation buttons
                     HStack {
                         // Back Button
-                        Button(action: {
-                            dismiss() // Navigate back to the previous screen
-                        }) {
-                            HStack {
-                                Image(systemName: "arrow.left")
-                                    .foregroundColor(.blue)
-                                Text("Back")
-                                    .foregroundColor(.blue)
-                                    .font(.body)
-                            }
-                        }
-                        .padding(.leading, 20)
-
-                        Spacer()
+                        
 
                         // Next Button using NavigationLink
                         NavigationLink(destination: WeightSelectionView()) {
