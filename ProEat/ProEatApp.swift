@@ -6,10 +6,11 @@ struct ProEatApp: App {
 
     var body: some Scene {
         WindowGroup {
+            // Only check the onboarding status here, and show either ContentView or EntryPageView
             if isOnboardingComplete {
-                ContentView() // Main app content
+                ContentView() // Navigate to main content view if onboarding is complete
             } else {
-                EntryPageView() // Start onboarding
+                EntryPageView() // Show the entry page if onboarding is not complete
             }
         }
     }
