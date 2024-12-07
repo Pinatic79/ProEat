@@ -33,10 +33,12 @@ struct AboutUsView: View {
                 
                 VStack(spacing: 30) {
                     // App Logo or Icon
-                    Image(systemName: "leaf.circle.fill")
+                    Image("logo")
+                        
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: 120, height: 120)
+                        .frame(width: 140, height: 140)
+                        .cornerRadius(80)
                         .foregroundColor(.white)
                         .shadow(radius: 10)
                         .scaleEffect(1 + 0.1 * animationProgress)
