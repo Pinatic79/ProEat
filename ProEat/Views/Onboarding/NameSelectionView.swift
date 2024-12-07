@@ -2,7 +2,7 @@ import SwiftUI
 
 struct NameSelectionView: View {
     @State private var userName: String = ""  // Local state for the text field
-    @AppStorage("userName") private var storedUserName: String = ""  // Persistent storage for name
+    @AppStorage("userNameKey") private var storedUserName: String = ""  // Persistent storage for name
     @Environment(\.dismiss) var dismiss // To enable the Back button
 
     var body: some View {
@@ -66,18 +66,20 @@ struct NameSelectionView: View {
                     }
                     .disabled(userName.isEmpty) // Disable button if no input
                     .padding(.bottom, 60)
-                    .onTapGesture {
-                        saveUserName()
-                    }
+                    .simultaneousGesture(
+                        TapGesture().onEnded {
+                            saveUserName()
+                        }
+                    )
                 }
                 .padding(.top, 80)
             }
-            .navigationBarTitleDisplayMode(.inline) // Ensure title doesn't take up too much space
-            .navigationBarBackButtonHidden(true) // Hide the default back button
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
-                        dismiss() // Navigate back to the previous screen
+                        dismiss()
                     }) {
                         Image(systemName: "arrow.left")
                             .foregroundColor(.blue)
@@ -87,9 +89,18 @@ struct NameSelectionView: View {
         }
     }
 
-    // Save name to UserDefaults
+    // Save name to UserDefaults with validation
     func saveUserName() {
-        storedUserName = userName
+        // Trim whitespaces and validate name
+        let trimmedName = userName.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        // Only save if name is not empty
+        if !trimmedName.isEmpty {
+            storedUserName = trimmedName
+            print("Username saved successfully: \(storedUserName)")
+        } else {
+            print("Username is empty, not saving")
+        }
     }
 }
 

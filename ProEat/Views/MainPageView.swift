@@ -2,7 +2,9 @@ import SwiftUI
 
 struct MainPageView: View {
     @State private var foodInput: String = ""
-    
+    @State private var showAboutUs = false
+    @AppStorage("userNameKey") private var userName: String = "User"
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -24,7 +26,7 @@ struct MainPageView: View {
                         Spacer()
                         
                         Button(action: {
-                            print("Settings button tapped")
+                            showAboutUs = true
                         }) {
                             Image(systemName: "gearshape.fill")
                                 .foregroundColor(.white)
@@ -35,9 +37,17 @@ struct MainPageView: View {
                     .padding(.horizontal, 20)
                     .padding(.top, 40)
                     
+                    // Greeting Section with the user's name
+                    VStack {
+                        Text("\(getGreeting()), \(getUserName())!")
+                            .font(.system(size: 24, weight: .medium, design: .rounded))
+                            .foregroundColor(.white)
+                            .padding(.top, 10)
+                    }
+                    
                     // Placeholder for Vector Graphics or Animation
                     VStack {
-                        Image(systemName: "leaf.circle.fill") // Replace with your graphic or animation
+                        Image(systemName: "leaf.circle.fill")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 150, height: 150)
@@ -85,17 +95,12 @@ struct MainPageView: View {
                             print("Scan button tapped")
                         }) {
                             HStack {
-                                Text("Send/Scan the food")
-                                    .font(.system(size: 18, weight: .bold, design: .rounded))
-                                    .foregroundColor(.white)
                                 
                                 Spacer()
                                 
-                                Image(systemName: "arrow.right")
-                                    .foregroundColor(.white)
-                                    .font(.title3)
+                                
                             }
-                            .padding()
+                          
                             .background(LinearGradient(
                                 gradient: Gradient(colors: [Color.purple, Color.blue]),
                                 startPoint: .leading,
@@ -110,7 +115,31 @@ struct MainPageView: View {
                     Spacer()
                 }
             }
+            .navigationDestination(isPresented: $showAboutUs) {
+                AboutUsView()
+            }
         }
+        .onAppear {
+            print("Retrieved user name: \(userName)")
+        }
+    }
+    
+    // Function to get a greeting based on the current time
+    private func getGreeting() -> String {
+        let hour = Calendar.current.component(.hour, from: Date())
+        if hour >= 5 && hour < 12 {
+            return "Good morning"
+        } else if hour >= 12 && hour < 18 {
+            return "Good afternoon"
+        } else {
+            return "Good evening"
+        }
+    }
+    
+    // Function to safely retrieve username
+    private func getUserName() -> String {
+        let trimmedName = userName.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmedName.isEmpty ? "User" : trimmedName
     }
 }
 

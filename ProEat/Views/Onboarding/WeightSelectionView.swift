@@ -6,6 +6,8 @@ struct WeightSelectionView: View {
     @AppStorage("userWeight") private var storedUserWeight: Double = 0.0
     @State private var isNavigatingToDiet = false
     @FocusState private var isTextFieldFocused: Bool
+    @State private var keyboardHeight: CGFloat = 0
+    @State private var hideScaleMass = false
     @Environment(\.dismiss) var dismiss // To enable back navigation
 
     var body: some View {
@@ -58,14 +60,20 @@ struct WeightSelectionView: View {
                         .padding(.top, 10)
                     }
 
-                    Image(systemName: "scalemass.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 120, height: 120)
-                        .foregroundColor(.white.opacity(0.7))
+                    // This scales down when the keyboard appears and is hidden
+                    if !hideScaleMass {
+                        Image(systemName: "scalemass.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 120, height: 120)
+                            .foregroundColor(.white.opacity(0.7))
+                            .transition(.scale) // Smooth scaling transition when disappearing
+                            .animation(.easeOut(duration: 0.4), value: hideScaleMass)
+                    }
 
                     Spacer()
 
+                    // Next Button using NavigationLink
                     // Next Button using NavigationLink
                     NavigationLink(destination: DietSelectionView()) {
                         Text("Next")
@@ -82,8 +90,37 @@ struct WeightSelectionView: View {
                     .onTapGesture {
                         saveWeightAndProceed()
                     }
+                    .offset(y: keyboardHeight > 0 ? -50 : 0) // Adjust this value to fine-tune button position
+                    .animation(.easeInOut(duration: 0.3), value: keyboardHeight) // Smooth movement of the button
                 }
                 .padding(.top, 80)
+                // Corrected onChange syntax
+                .onChange(of: keyboardHeight) { _, newHeight in
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        hideScaleMass = newHeight > 0
+                    }
+                }
+            }
+            .onAppear {
+                // Detecting keyboard events to adjust the keyboard height
+                NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { _ in
+                    // Get the height of the keyboard and animate the layout
+                    withAnimation {
+                        keyboardHeight = 250 // Or dynamic value based on the keyboard size
+                    }
+                }
+
+                NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { _ in
+                    // Reset the keyboard height when the keyboard disappears
+                    withAnimation {
+                        keyboardHeight = 0
+                    }
+                }
+            }
+            .onDisappear {
+                // Remove observers when the view disappears
+                NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+                NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
             }
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true)
