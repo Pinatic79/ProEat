@@ -79,9 +79,8 @@ struct DietSelectionView: View {
 
                     Spacer()
 
-                    Button(action: {
-                        saveDietPreferenceAndProceed()
-                    }) {
+                    // Next Button using NavigationLink
+                    NavigationLink(destination: ConsentPageView()) {
                         Text("Next")
                             .frame(width: 100, height: 44)
                             .background(selectedDiet == nil ? Color.gray : Color.blue)
@@ -96,12 +95,12 @@ struct DietSelectionView: View {
                 }
                 .padding(.top, 80)
             }
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
+            .navigationBarTitleDisplayMode(.inline) // Ensure title doesn't take up too much space
+            .navigationBarBackButtonHidden(true) // Hide the default back button
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
-                        dismiss()
+                        dismiss() // Navigate back to the previous screen
                     }) {
                         Image(systemName: "arrow.left")
                             .foregroundColor(.blue)

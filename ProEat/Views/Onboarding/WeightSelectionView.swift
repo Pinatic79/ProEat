@@ -102,7 +102,7 @@ struct WeightSelectionView: View {
 
     func saveWeightAndProceed() {
         if let inputWeight = Double(weight) {
-            let weightInKg = selectedUnit == "lb" ? convertLbToKg(inputWeight) : inputWeight
+            let weightInKg = selectedUnit == "lbs" ? convertLbToKg(inputWeight) : inputWeight
             storedUserWeight = weightInKg
             print("Stored weight in kg: \(weightInKg)")
 
